@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.persistence.PointMapper">
+
+    <insert id="insertPointlog" parameterType="com.example.demo.domin.Pointlog">
+        INSERT INTO pointlog (state,type,operated_qq_id,operate_type,operate_point,description,img,operate_date,operator_id,forum_id,pointlog.`explain`,pointlog.remark) VALUES (#{state},#{type},#{operated_qq_id},#{operate_type},#{operate_point},#{description},#{img},current_timestamp,11,#{forum_id},#{explain},#{remark})
+    </insert>
+
+    <select id="getForum" parameterType="int" resultType="com.example.demo.domin.Forum">
+        SELECT allforum.id AS id,allforum.idol_id AS idol_id,allforum.user_id AS user_id,allforum.type AS type,allforum.title AS title,allforum.content AS content,allforum.vid AS vid,allforum.audio_url AS audio_url,allforum.praise_counts AS praise_counts,allforum.is_pick AS is_pick,allforum.is_original AS is_original,allforum.is_top AS is_top,allforum.tag AS tag,allforum.status AS status,allforum.created_time AS created_time,allforum.is_official AS is_official FROM allforum WHERE allforum.id = #{id} FOR UPDATE ;
+    </select>
+
+    <select id="getbookedForum" parameterType="int" resultType="com.example.demo.domin.Forum">
+        SELECT forum.id AS id,forum.user_id AS user_id,forum.type AS type,forum.title AS title,forum.content AS content,forum.vid AS vid,forum.praise_counts AS praise_counts,forum.is_pick AS is_pick,forum.tag AS tag,forum.status AS status,forum.created_time AS created_time FROM forum WHERE forum.id = #{id} FOR UPDATE ;
+    </select>
+
+    <select id="getForumListByXcxuid" parameterType="string" resultType="com.example.demo.domin.Forum">
+        SELECT allforum.id AS id,allforum.idol_id AS idol_id,allforum.user_id AS user_id,allforum.type AS type,allforum.title AS title,allforum.content AS content,allforum.vid AS vid,allforum.audio_url AS audio_url,allforum.praise_counts AS praise_counts,allforum.is_pick AS is_pick,allforum.is_original AS is_original,allforum.is_top AS is_top,allforum.tag AS tag,allforum.status AS status,allforum.created_time AS created_time,allforum.is_official AS is_official FROM allforum WHERE allforum.user_id = #{xcxuid} AND date_sub(curdate(), INTERVAL 7 DAY) &lt;= date(str_to_date(allforum.created_time,'%Y-%m-%d %H:%i')) AND allforum.idol_id = 4 FOR UPDATE ;
+    </select>
+    
+    <insert id="insertForum" parameterType="com.example.demo.domin.Forum">
+        INSERT INTO allforum (id,user_id,idol_id,type,title,content,vid,audio_url,praise_counts,is_pick,is_original,is_top,tag,status,created_time,is_official,topics) VALUES (#{id},#{user_id},#{idol_id},#{type},#{title},#{content},#{vid},#{audio_url},#{praise_counts},#{is_pick},#{is_original},#{is_top},#{tag},#{status},#{created_time},#{is_official},#{topics})
+    </insert>
+
+    <insert id="insertbookedForum" parameterType="com.example.demo.domin.Forum">
+        INSERT INTO forum (id,user_id,type,title,content,vid,praise_counts,is_pick,tag,status,created_time) VALUES (#{id},#{user_id},#{type},#{title},#{content},#{vid},#{praise_counts},#{is_pick},#{tag},#{status},#{created_time})
+    </insert>
+
+    <select id="getInformableForumList" resultType="com.example.demo.domin.Forum">
+        SELECT allforum.id AS id,allforum.idol_id AS idol_id,allforum.user_id AS user_id,allforum.type AS type,allforum.title AS title,allforum.content AS content,allforum.vid AS vid,allforum.audio_url AS audio_url,allforum.praise_counts AS praise_counts,allforum.is_pick AS is_pick,allforum.is_original AS is_original,allforum.is_top AS is_top,allforum.tag AS tag,allforum.status AS status,allforum.created_time AS created_time,allforum.is_official AS is_official from allforum where STR_TO_DATE(allforum.created_time,'%Y-%m-%d %H:%i') >  DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND allforum.id not in (SELECT Informedforum.forum_id FROM Informedforum) ;
+    </select>
+
+    <insert id="insertInformedForum" parameterType="int">
+        INSERT INTO informedforum (forum_id,is_informed,informed_date) VALUES (#{forum_id},1,current_timestamp) ;
+    </insert>
+
+</mapper>

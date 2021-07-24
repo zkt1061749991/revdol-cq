@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.persistence.ResourceMapper">
+    <select id="getZfList" resultType="com.example.demo.domin.Topic">
+        SELECT topic.id AS id,topic.topic AS topic,topic.type AS type,topic.state AS state,topic.point AS point,topic.description AS description FROM topic WHERE topic.type = 2 AND topic.state = 1 ;
+    </select>
+
+    <select id="getZfTopic" resultType="com.example.demo.domin.Topic">
+        SELECT topic.id AS id,topic.topic AS topic,topic.type AS type,topic.state AS state,topic.point AS point,topic.description AS description FROM topic WHERE topic.type = 2 AND topic.topic = #{topic} ;
+    </select>
+
+    <insert id="insertZfTopic" parameterType="com.example.demo.domin.Topic">
+        INSERT INTO topic (topic,type,state,point) VALUES (#{topic},2,1,#{point}) ;
+    </insert>
+
+    <select id="getLastZf" parameterType="com.example.demo.domin.Zf" resultType="com.example.demo.domin.Zf">
+        SELECT zf.id AS id,zf.qq AS qq,zf.topic AS topic,zf.date AS date FROM zf WHERE zf.qq = #{qq} AND zf.topic = #{topic} AND TO_DAYS(zf.date) = TO_DAYS(NOW()) ;
+    </select>
+
+    <select id="getSendTopicList" resultType="com.example.demo.domin.Topic">
+        SELECT topic.id AS id,topic.topic AS topic,topic.type AS type,topic.state AS state,topic.point AS point,topic.description AS description FROM topic WHERE topic.type = 1 AND topic.state = 1 ;
+    </select>
+
+    <select id="getActTopicList" resultType="com.example.demo.domin.Topic">
+        SELECT topic.id AS id,topic.topic AS topic,topic.type AS type,topic.state AS state,topic.point AS point,topic.description AS description FROM topic WHERE topic.type = 0 AND topic.state = 1 ;
+    </select>
+    
+    <insert id="insertZf" parameterType="com.example.demo.domin.Zf">
+        INSERT INTO zf (qq,topic,date) VALUES (#{qq},#{topic},current_timestamp) ;
+    </insert>
+
+    <select id="getImageListByForum_id" parameterType="int" resultType="com.example.demo.domin.Image">
+        SELECT image.id AS id,image.type AS type,image.img AS img,image.forum_id AS forum_id,image.uid AS uid, image.width AS width, image.height AS height, image.url AS url FROM image WHERE image.forum_id = #{id} AND image.type = 1 ORDER BY image.id ASC ;
+    </select>
+
+    <select id="getThumbListByForum_id" parameterType="int" resultType="com.example.demo.domin.Image">
+        SELECT image.id AS id,image.type AS type,image.img AS img,image.forum_id AS forum_id,image.uid AS uid, image.width AS width, image.height AS height, image.url AS url FROM image WHERE image.forum_id = #{id} AND image.type = 0 ORDER BY image.id ASC ;
+    </select>
+
+    <insert id="insertImage" parameterType="com.example.demo.domin.Image">
+        INSERT INTO image (type,img,url,forum_id,uid,width,height) VALUES (#{type},#{img},#{url},#{forum_id},#{uid},#{width},#{height}) ;
+    </insert>
+
+</mapper>

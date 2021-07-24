@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.persistence.AccountMapper">
+
+  <select id="getAccount" parameterType="string" resultType="com.example.demo.domin.Account">
+    SELECT signon.qq AS qq,account.`name` AS name,account.point AS point,account.state AS state,account.weixin AS weixin,account.bilibili AS bilibili,account.xcxuid AS xcxuid,account.xcxname AS xcxname,account.remark AS remark, account.address AS address FROM account,signon WHERE account.qq_id = #{qq} AND signon.qq = account.qq_id FOR UPDATE ;
+  </select>
+
+  <select id="getAccountByXcxuid" parameterType="string" resultType="com.example.demo.domin.Account">
+    SELECT signon.qq AS qq,account.`name` AS name,account.point AS point,account.state AS state,account.weixin AS weixin,account.bilibili AS bilibili,account.xcxuid AS xcxuid,account.xcxname AS xcxname,account.remark AS remark FROM account,signon WHERE account.xcxuid = #{uid} AND signon.qq = account.qq_id FOR UPDATE ;
+  </select>
+
+  <update id="updateAccount" parameterType="com.example.demo.domin.Account">
+    UPDATE account SET account.name = #{name},account.weixin=#{weixin},account.bilibili=#{bilibili},account.xcxuid=#{xcxuid},account.xcxname=#{xcxname},account.address=#{address} WHERE account.qq_id = #{qq}
+  </update>
+
+  <update id="updateState" parameterType="com.example.demo.domin.Account">
+    UPDATE account SET account.state = #{state},account.xcxname = #{xcxname} WHERE account.qq_id = #{qq};
+  </update>
+
+    <select id="getMember" parameterType="int" resultType="com.example.demo.domin.Member">
+    SELECT member.id AS id,member.openid AS openid,member.uid AS uid,member.sex AS sex,member.nickname AS nickname,member.birth AS birth,member.headimg AS headimg,member.signature AS signature,member.status AS status,member.official_verify AS official_verify FROM member WHERE member.uid = #{uid} ;
+  </select>
+
+    <insert id="insertMember" parameterType="com.example.demo.domin.Member">
+    INSERT INTO member (id,openid,uid,sex,nickname,birth,headimg,address,signature,status,date,official_verify) VALUES (#{id},#{openid},#{uid},#{sex},#{nickname},#{birth},#{headimg},#{address},#{signature},#{status},current_timestamp,#{official_verify}) ;
+    </insert>
+
+    <update id="updateMember" parameterType="com.example.demo.domin.Member">
+    UPDATE member SET member.openid = #{openid},member.sex=#{sex},member.nickname=#{nickname},member.birth=#{birth},member.headimg=#{headimg},member.address=#{address},member.signature=#{signature},member.status=#{status},member.date=current_timestamp,member.official_verify=#{official_verify} WHERE member.id = #{id} ;
+    </update>
+
+    <select id="getContribute" parameterType="int" resultType="com.example.demo.domin.Contribute">
+    SELECT contribute.id AS id,contribute.point AS point,contribute.user_point AS user_point,contribute.uid AS user_id,contribute.level AS level,contribute.idol_id AS idol_id,contribute.status AS status FROM contribute WHERE contribute.id = #{id} ;
+    </select>
+
+    <insert id="insertContribute" parameterType="com.example.demo.domin.Contribute">
+    INSERT INTO contribute (id,point,user_point,uid,level,date,idol_id,status) VALUES (#{id},#{point},#{user_point},#{user_id},#{level},current_timestamp,#{idol_id},#{status}) ;
+    </insert>
+
+    <update id="updateContribute" parameterType="com.example.demo.domin.Contribute">
+    UPDATE contribute SET contribute.point=#{point},contribute.user_point=#{user_point},contribute.level=#{level},contribute.date=current_timestamp,contribute.status=#{status} WHERE contribute.id = #{id} ;
+    </update>
+
+</mapper>

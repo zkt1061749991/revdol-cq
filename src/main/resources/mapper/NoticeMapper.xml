@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.persistence.NoticeMapper">
+
+    <select id="getNowIndexBanner" resultType="com.example.demo.domin.Event">
+        SELECT event.id AS id, event.event_title AS event_title, event.event_alt AS event_alt, event.img AS img, event.url AS url, event.begin_date AS begin_date, event.end_date AS end_date FROM event WHERE event.type = 0 AND event.state = 1 ORDER BY begin_date DESC;
+    </select>
+
+</mapper>
